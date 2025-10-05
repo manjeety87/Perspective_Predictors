@@ -36,28 +36,29 @@ const Home = () => {
     setTemperatureData(filtered);
   }, [dateRange, activity]);
 
-  // 🧠 Callback from child Maps
   const handleLocationSelect = (coords: { lat: number; lng: number }) => {
     setCoordinates(coords);
     console.log("🌍 Coordinates saved in store:", coords);
   };
 
-  // For demo: log all store data together
   useEffect(() => {
     console.log("🧭 Store snapshot:", { activity, dateRange, coordinates });
   }, [activity, dateRange, coordinates]);
 
   return (
-    <main className="flex flex-col items-center w-full min-h-screen bg-black text-white py-10 gap-8">
-      <h1 className="text-2xl font-semibold">Weather Insights</h1>
-
-      <Maps onLocationSelect={handleLocationSelect} />
-
-      <ActivitySelector activity={activity} setActivity={setActivity} />
-
-      <div className="w-full flex flex-col items-center gap-6 mt-4">
-        <h2 className="text-xl font-medium">Select Date Range</h2>
-        <DateRangeCalendar selectModeOnly={true} onDateChange={setDateRange} />
+    <main className="flex flex-col max-w-7xl justify-center items-center w-full min-h-screen bg-black text-white py-10 gap-8">
+      <div className="flex justify-between gap-4 w-full">
+        <div>
+          <ActivitySelector activity={activity} setActivity={setActivity} />
+          <div className="w-full gap-6 mt-8">
+            <div className="">Select Date Range</div>
+            <DateRangeCalendar
+              selectModeOnly={true}
+              onDateChange={setDateRange}
+            />
+          </div>
+        </div>
+        <Maps onLocationSelect={handleLocationSelect} />
       </div>
 
       <div className="w-full flex flex-col items-center gap-6 mt-8">
