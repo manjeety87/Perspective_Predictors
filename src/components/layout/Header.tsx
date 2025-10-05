@@ -6,7 +6,7 @@ const Header = () => {
       <div className="flex items-center gap-2">
         <Thermometer className="text-blue-400" />
         <h1 className="text-lg font-semibold tracking-wide">
-          Perscpective Predictors Labs
+          Rain Check
         </h1>
       </div>
     </header>
