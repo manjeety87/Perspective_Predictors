@@ -13,22 +13,29 @@
 //   wind: number;
 // }
 
+// interface WeatherDayInfo {
+//   temp: number;
+//   rain: number;
+//   wind: number;
+// }
+
 // interface WeatherState {
 //   activity: string;
 //   dateRange?: DateRange;
 //   coordinates?: Coordinates;
 //   locationName?: string;
-//   temperatureData?: Record<string, number>;
+//   temperatureData?: Record<string, WeatherDayInfo>;
 //   loading: boolean;
-//   selectedDays: WeatherDayData[];
-//   addSelectedDay: (data: WeatherDayData) => void;
-//   clearSelectedDays: () => void;
+
+//   // 👇 new additions
+//   selectedDayData?: WeatherDayData;
+//   setSelectedDayData: (data: WeatherDayData | undefined) => void;
 
 //   setActivity: (activity: string) => void;
 //   setDateRange: (range: DateRange | undefined) => void;
 //   setCoordinates: (coords: Coordinates) => void;
 //   setLocationName: (name: string) => void;
-//   setTemperatureData: (data: Record<string, number>) => void;
+//   setTemperatureData: (data: Record<string, WeatherDayInfo>) => void;
 //   setLoading: (state: boolean) => void;
 //   resetAll: () => void;
 // }
@@ -40,14 +47,18 @@
 //   locationName: undefined,
 //   temperatureData: undefined,
 //   loading: false,
+//   selectedDayData: undefined,
 
+//   // 🧠 Setters
 //   setActivity: (activity) => set({ activity }),
 //   setDateRange: (dateRange) => set({ dateRange }),
 //   setCoordinates: (coordinates) => set({ coordinates }),
 //   setLocationName: (locationName) => set({ locationName }),
 //   setTemperatureData: (temperatureData) => set({ temperatureData }),
 //   setLoading: (loading) => set({ loading }),
+//   setSelectedDayData: (selectedDayData) => set({ selectedDayData }),
 
+//   // 🔄 Reset all states
 //   resetAll: () =>
 //     set({
 //       activity: "",
@@ -56,55 +67,58 @@
 //       locationName: undefined,
 //       temperatureData: undefined,
 //       loading: false,
+//       selectedDayData: undefined,
 //     }),
-
-//   selectedDays: [],
-//   addSelectedDay: (data) =>
-//     set((state) => {
-//       // avoid duplicates
-//       const exists = state.selectedDays.find((d) => d.date === data.date);
-//       if (exists) return state;
-//       return { selectedDays: [...state.selectedDays, data] };
-//     }),
-//   clearSelectedDays: () => set({ selectedDays: [] }),
 // }));
 
 import { create } from "zustand";
 import type { DateRange } from "react-day-picker";
 
+// 🌍 Coordinates type
 interface Coordinates {
   lat: number;
   lng: number;
 }
 
-interface WeatherDayData {
+// 🌡 Each day's data
+export interface WeatherDayData {
   date: string;
   temp: number;
   rain: number;
   wind: number;
 }
 
+// 🧩 Data structure returned from backend (mapped by date)
+export interface WeatherDayInfo {
+  temp: number;
+  rain: number;
+  wind: number;
+}
+
+// 🏪 Zustand Store State
 interface WeatherState {
   activity: string;
   dateRange?: DateRange;
   coordinates?: Coordinates;
   locationName?: string;
-  temperatureData?: Record<string, number>;
+  temperatureData?: Record<string, WeatherDayInfo>; // ✅ fixed type
   loading: boolean;
 
-  // 👇 new additions
+  // ✅ for single selected day (when clicked on calendar)
   selectedDayData?: WeatherDayData;
-  setSelectedDayData: (data: WeatherDayData | undefined) => void;
 
+  // --- Actions ---
   setActivity: (activity: string) => void;
   setDateRange: (range: DateRange | undefined) => void;
   setCoordinates: (coords: Coordinates) => void;
   setLocationName: (name: string) => void;
-  setTemperatureData: (data: Record<string, number>) => void;
+  setTemperatureData: (data: Record<string, WeatherDayInfo>) => void;
   setLoading: (state: boolean) => void;
+  setSelectedDayData: (data: WeatherDayData | undefined) => void;
   resetAll: () => void;
 }
 
+// ✅ Store Implementation
 export const useWeatherStore = create<WeatherState>((set) => ({
   activity: "",
   dateRange: undefined,
@@ -114,7 +128,7 @@ export const useWeatherStore = create<WeatherState>((set) => ({
   loading: false,
   selectedDayData: undefined,
 
-  // 🧠 Setters
+  // --- Actions ---
   setActivity: (activity) => set({ activity }),
   setDateRange: (dateRange) => set({ dateRange }),
   setCoordinates: (coordinates) => set({ coordinates }),
@@ -123,7 +137,7 @@ export const useWeatherStore = create<WeatherState>((set) => ({
   setLoading: (loading) => set({ loading }),
   setSelectedDayData: (selectedDayData) => set({ selectedDayData }),
 
-  // 🔄 Reset all states
+  // --- Reset Everything ---
   resetAll: () =>
     set({
       activity: "",

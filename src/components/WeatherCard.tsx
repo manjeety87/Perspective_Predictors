@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getWeatherIcon } from "@/lib/getWeatherIcon";
+import { getWeatherIcons } from "@/lib/getWeatherIcon";
 
 interface WeatherCardProps {
   date: string;
@@ -14,8 +14,8 @@ export default function WeatherCard({
   rain,
   wind,
 }: WeatherCardProps) {
-  const icon = getWeatherIcon(temp, rain, wind);
-  const tempC = (temp - 273.15).toFixed(1); // convert Kelvin to °C
+  const tempC = temp.toFixed(1);
+  const { tempIcon, rainIcon, windIcon } = getWeatherIcons(temp, rain, wind);
 
   return (
     <Card className="w-52 bg-gray-900 text-white border-gray-700 hover:shadow-md hover:scale-[1.02] transition-all">
@@ -25,14 +25,27 @@ export default function WeatherCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center space-y-2">
-        <img
-          src={icon}
-          alt="Weather Icon"
-          className="w-12 h-12 object-contain"
-        />
-        <div className="text-lg font-bold">{tempC}°C</div>
-        <div className="text-sm text-gray-400">💧 Rain: {rain.toFixed(3)}</div>
-        <div className="text-sm text-gray-400">🌬 Wind: {wind.toFixed(1)}</div>
+        <div className="flex w-full items-center">
+          Temp:
+          <img
+            src={tempIcon}
+            alt="Temperature"
+            className="w-8 object-contain"
+          />
+          <div className="text-lg font-bold">{tempC}°C</div>
+        </div>
+        <div className="flex w-full items-center">
+          Rain:
+          <img src={rainIcon} alt="Rain" className="w-6 object-contain" />
+          <div className="text-lg font-bold">{rain.toFixed(3)}mm/h</div>
+        </div>
+        <div className="flex w-full items-center">
+          Wind:
+          <img src={windIcon} alt="Wind" className="w-8 object-contain" />
+          <div className="text-lg font-bold">{wind.toFixed(1)}km/h</div>
+        </div>
+        {/* <div className="text-sm text-gray-400">💧 Rain: {rain.toFixed(3)}</div>
+        <div className="text-sm text-gray-400">🌬 Wind: {wind.toFixed(1)}</div> */}
       </CardContent>
     </Card>
   );

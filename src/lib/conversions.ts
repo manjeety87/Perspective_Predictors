@@ -132,20 +132,29 @@ export function toBackendPayload({
 //   return result;
 // }
 
-export function fromBackendResponse(response: any): Record<string, number> {
-  const result: Record<string, number> = {};
+// src/lib/conversions.ts
+export function fromBackendResponse(response: any) {
+  // ✅ Store data by date key (YYYY-MM-DD)
+  const result: Record<string, { temp: number; rain: number; wind: number }> =
+    {};
 
   if (Array.isArray(response)) {
     response.forEach((item) => {
       if (item.Date && item.Temp !== undefined) {
-        // ✅ Convert Kelvin → Celsius
-        const tempCelsius = item.Temp - 273.15;
-        result[new Date(item.Date).toISOString().split("T")[0]] = tempCelsius;
+        const dateKey = new Date(item.Date).toISOString().split("T")[0];
+
+        // 🧠 Backend already sends °C, so no Kelvin conversion
+        const tempC = item.Temp;
+        const rain = item.Rain ?? 0;
+        const wind = item.Wind ?? 0;
+
+        result[dateKey] = { temp: tempC, rain, wind };
       }
     });
   } else if (response.temperatureData) {
+    // fallback for older structure
     Object.entries(response.temperatureData).forEach(([date, temp]) => {
-      result[date] = Number(temp) - 273.15;
+      result[date] = { temp: Number(temp), rain: 0, wind: 0 };
     });
   }
 

@@ -62,6 +62,7 @@ const Home = () => {
           <div className="w-full gap-6 mt-8">
             <div className="">Select Date Range</div>
             <DateRangeCalendar
+              mode="range"
               selectModeOnly={true}
               onDateChange={setDateRange}
             />
@@ -79,26 +80,29 @@ const Home = () => {
       </div>
       <Button onClick={fetchWeatherData}>Check</Button>
 
-      {
+      {/* {
         <div className="mt-8 bg-gray-900 text-white p-4 rounded-lg w-80 text-center">
           <h3 className="font-semibold mb-2">Selected Location</h3>
           <p className="text-gray-300 mb-1">{locationName || "Fetching..."}</p>
           <p>Latitude: {coordinates?.lat.toFixed(4)}</p>
           <p>Longitude: {coordinates?.lng.toFixed(4)}</p>
         </div>
-      }
+      } */}
+      {/* <div>{JSON.stringify(temperatureData)}</div> */}
 
-      {/* 🌡 Show only when data loaded */}
       <div>
         {loading ? (
           <div className="mt-8 text-gray-400">Loading weather data...</div>
-        ) : temperatureData && Object.keys(temperatureData).length > 0 ? (
+        ) : temperatureData ? (
           <>
             <div className="w-full mb-6 flex flex-col items-center gap-6 mt-8">
               <h2 className="text-xl font-medium">Temperature Overview</h2>
               <div className="flex flex-col items-center">
-                <DateRangeCalendar temperatureData={temperatureData} />
-                <div className="flex flex-wrap gap-4 justify-center mt-6">
+                <DateRangeCalendar
+                  mode="single"
+                  temperatureData={temperatureData}
+                />
+                <div className="flex gap-4 justify-center mt-6">
                   {selectedDayData && (
                     <WeatherCard
                       date={selectedDayData.date}

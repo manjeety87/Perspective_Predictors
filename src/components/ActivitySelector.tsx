@@ -21,6 +21,7 @@ const ActivitySelector = ({ activity, setActivity }: ActivitySelectorProps) => {
           <SelectValue placeholder="Choose an activity" />
         </SelectTrigger>
         <SelectContent className="text-white border-gray-700">
+          <SelectItem value="golfing">Golfing</SelectItem>
           <SelectItem value="outdoor">Outdoor Sports</SelectItem>
           <SelectItem value="farming">Farming</SelectItem>
           <SelectItem value="commute">Daily Commute</SelectItem>
